@@ -38,32 +38,32 @@ pip install -r requirements.txt
 
 ### Export a Single VM
 ```bash
-python3 pv2export.py --export --vmids 108 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --compress zstd --mode stop
+python3 vm-export-import.py --export --vmids 108 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --compress zstd --mode stop
 ```
 
 ### Export Multiple VMs
 ```bash
-python3 pv2export.py --export --vmids 108,105,800 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --compress zstd --mode stop
+python3 vm-export-import.py --export --vmids 108,105,800 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --compress zstd --mode stop
 ```
 
-### Export All VMs
+### Export All VMspv2export.py 
 ```bash
-python3 pv2export.py --export --vmids all --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --compress zstd --mode stop
+python3 vm-export-import.py --export --vmids all --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --compress zstd --mode stop
 ```
 
 ## Import
 
 ### Import a Single VM
 ```bash
-python3 pv2export.py --import --vmids 108 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --mode stop
+python3 vm-export-import.py --import --vmids 108 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --mode stop
 ```
 
 ### Import Multiple VMs
 ```bash
-python3 pv2export.py --import --vmids 108,105,800 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --mode stop
+python3 vm-export-import.py --import --vmids 108,105,800 --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --mode stop
 ```
 
 ### Import All VMs
 ```bash
-python3 pv2export.py --import --vmids all --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --mode stop
+python3 vm-export-import.py --import --vmids all --share //SERVER/share --mountpoint /mnt/samba --domain WORKGROUP --vers 3.0 --username YOURUSERNAME --password --mode stop
 ```

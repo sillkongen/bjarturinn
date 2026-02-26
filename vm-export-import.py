@@ -166,6 +166,7 @@ def vzdump_with_progress(vmid: int, dumpdir: Path, compress="zstd", mode="stop",
         bufsize=1,
     )
 
+    # In-place bar on Unix TTY; Windows cmd often shows one line per percent (no \r support)
     pbar = tqdm(total=100, desc=f"VM {vmid}", unit="%", leave=True, dynamic_ncols=True)
     last_percent = 0
     tail = []  # keep last lines for debugging if it fails
@@ -237,7 +238,9 @@ def main():
     ap.add_argument("--storage", default=None,
                     help="Target Proxmox storage for restored disks (qmrestore --storage).")
     ap.add_argument("--new-vmid", action="store_true",
-                    help="Allocate new VMIDs on import to avoid conflicts.")
+                    help="Allocate next free VMID(s) on import to avoid conflicts.")
+    ap.add_argument("--as-vmid", type=int, metavar="TARGET", default=None,
+                    help="Import only: restore as this VMID (single VM). Use when source ID exists on target, e.g. --vmids 999 --as-vmid 1000.")
     ap.add_argument("--verbose", action="store_true",
                     help="Print vzdump output lines (won't break progress bar).")
 
@@ -251,6 +254,13 @@ def main():
 
     if not args.password:
         args.password = getpass("SMB password: ")
+
+    if getattr(args, "as_vmid", None) is not None and not args.do_import:
+        print("ERROR: --as-vmid is only valid with --import.", file=sys.stderr)
+        sys.exit(2)
+    if getattr(args, "as_vmid", None) is not None and len(vmids) != 1:
+        print("ERROR: --as-vmid requires exactly one VMID (e.g. --vmids 999).", file=sys.stderr)
+        sys.exit(2)
 
     print(f"VMIDs: {', '.join(map(str, vmids))}")
 
@@ -299,7 +309,12 @@ def main():
                 if backup is None:
                     raise RuntimeError(f"No backup found for VMID {vmid} in {vm_dir}")
 
-                target_vmid = next_free_vmid() if args.new_vmid else vmid
+                if getattr(args, "as_vmid", None) is not None:
+                    target_vmid = args.as_vmid
+                elif args.new_vmid:
+                    target_vmid = next_free_vmid()
+                else:
+                    target_vmid = vmid
                 print(f"Restoring {backup.name} -> VMID {target_vmid}")
                 qmrestore_backup(backup, target_vmid, storage=args.storage)
 
